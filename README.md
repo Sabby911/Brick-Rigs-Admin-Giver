@@ -1,2 +1,8 @@
-# Brick-Rigs-Admin-Giver
-Doing what Fluppisoft never did. You can give people admin in your brick rigs server now!
+© 2025 Sabby911. All rights reserved.
+
+Permission is granted to use this project and its contents for commercial purposes only.
+
+Copying, modifying, distributing, or redistributing this project or any part of it
+is strictly prohibited without explicit written permission from the copyright holder.
+
+
