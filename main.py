@@ -4,8 +4,9 @@ import win32gui
 from dotenv import load_dotenv
 import discord
 from discord.ext import commands
+from function import grant_admin  # Import your admin function
 
-# Load .env variables
+# Load .env
 load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
@@ -15,10 +16,10 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Authorized Discord users
+# Only allow these users to run !admin
 AUTHORIZED_USERS = ["YourDiscordUsername#1234"]
 
-# Track Brick Rigs window state
+# Track Brick Rigs window
 BRwindowopen = False
 BRwindowclose = True
 last_state = None
@@ -38,7 +39,7 @@ async def monitor_window():
     await bot.wait_until_ready()
     channel = bot.get_channel(CHANNEL_ID)
     if not channel:
-        print("Channel not found. Make sure CHANNEL_ID is correct.")
+        print("Channel not found. Check CHANNEL_ID.")
         return
 
     while not bot.is_closed():
@@ -58,7 +59,7 @@ async def monitor_window():
 
 @bot.command()
 async def admin(ctx, target: str):
-    """Grant admin if the Brick Rigs window is open"""
+    """Grant admin in Brick Rigs via admin.ini"""
     author = str(ctx.author)
     if author not in AUTHORIZED_USERS:
         await ctx.send("❌ You are not authorized to use this command.")
@@ -68,19 +69,16 @@ async def admin(ctx, target: str):
         await ctx.send("❌ Cannot grant admin: Brick Rigs is not running.")
         return
 
-    # TODO: Replace this placeholder with actual admin granting logic
-    success = True
+    success = grant_admin(target)  # Call the function
 
     if success:
-        await ctx.send(f"✅ Admin granted to {target}.")
+        await ctx.send(f"✅ Admin granted to {target} in Brick Rigs.")
     else:
         await ctx.send(f"❌ Failed to grant admin to {target}.")
 
 @bot.event
 async def on_ready():
     print(f"Bot is online as {bot.user}")
-    # Start the Brick Rigs window monitor task
     bot.loop.create_task(monitor_window())
 
 bot.run(TOKEN)
-
